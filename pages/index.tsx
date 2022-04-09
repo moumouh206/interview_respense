@@ -24,7 +24,7 @@ export default function Index() {
     movies$.then((movies) => {
       // despatch the movies to the state
       Dispatch(setMovies(movies));
-      setFiltredMovies(movies.slice(0, 6));
+      setFiltredMovies(movies.slice(0, 12));
       setAllMoviesWithoutPagination(movies);
       setCategories(
         Object.values(
@@ -38,7 +38,7 @@ export default function Index() {
   };
   useEffect(films, []);
   useEffect(() => {
-    setFiltredMovies(AllMovies.slice(0, 6));
+    setFiltredMovies(AllMovies.slice(0, 12));
     setAllMoviesWithoutPagination(AllMovies);
     setCategories(
       Object.values(

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 
 export default function Pagination({ items, setFiltred }) {
-  const [pageSize, setPageSize] = useState(6);
+  const [pageSize, setPageSize] = useState(12);
   const [currentPage, setCurrentPage] = useState(1);
   const pagesCount = Math.ceil(items.length / pageSize);
 
