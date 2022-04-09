@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: 'Baloo Bhaijaan 2', cursive;
+}
+::-moz-selection {
+  /* Code for Firefox */
+  color: white;
+  background: rgb(168, 85, 247);
+}
+::-webkit-selection {
+  /* Code for Chrome and Safari */
+  color: white;
+  background: rgb(168, 85, 247);
+}
+
+::selection {
+  color: white;
+  background: rgb(168, 85, 247);
+}
