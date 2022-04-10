@@ -2,18 +2,20 @@
 
 import React, { useEffect, useState } from 'react';
 
-export default function Pagination({ items, setFiltred }) {
+export default function Pagination({ items, setFiltred, current, setCurrent }) {
   const [pageSize, setPageSize] = useState(12);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(current);
   const pagesCount = Math.ceil(items.length / pageSize);
 
   const pages = [...Array(pagesCount).keys()];
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
+    setCurrent(pageNumber);
   };
   const handlePageSizeChange = (e: any) => {
     setPageSize(e.target.value);
     setCurrentPage(1);
+    setCurrent(1);
   };
 
   useEffect(() => {
@@ -65,7 +67,11 @@ export default function Pagination({ items, setFiltred }) {
         </div>
         <div className="flex items-center">
           <span className="text-sm text-gray-500 mr-4">Film par page:</span>
-          <select onChange={(e) => handlePageSizeChange(e)} className="p-1">
+          <select
+            onChange={(e) => handlePageSizeChange(e)}
+            className="p-1"
+            defaultValue={12}
+          >
             {/* <option value={3}>3</option>
             <option value={4}>4</option> */}
             <option value={6}>6</option>

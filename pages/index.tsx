@@ -9,19 +9,32 @@ import { setMovies } from 'redux/actions/moviesActions';
 import Head from 'next/head';
 import MoviesList from 'components/MoviesList';
 import Pagination from 'components/Pagination';
+import Categories from 'components/Categories';
+import Search from 'components/Search';
+import store from 'redux/store';
+
+type RootState = ReturnType<typeof store.getState>;
 
 export default function Index() {
-  const AllMovies: Movie[] = useSelector((state) => state.allMovies.movies);
+  const AllMovies: Movie[] = useSelector(
+    (state: RootState) => state.allMovies.movies,
+  );
   const [AllMoviesWithoutPagination, setAllMoviesWithoutPagination] = useState(
     [],
   );
-  const [Search, setSearch] = useState('');
+
   const [FiltredMovies, setFiltredMovies] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const Dispatch = useDispatch();
   // get movies from data/movies.ts
   const films = () => {
     movies$.then((movies) => {
+      // pour eliminer les doublons dans la liste des films qui ont le meme titre
+      /* movies = movies.filter(
+        (value, index, self) =>
+          index === self.findIndex((t) => t.title === value.title),
+      ); */
       // despatch the movies to the state
       Dispatch(setMovies(movies));
       setFiltredMovies(movies.slice(0, 12));
@@ -52,11 +65,11 @@ export default function Index() {
   const handdleCategoryChange = (e: any) => {
     const value = Array.from(
       e.target.selectedOptions,
-      (option) => option.value,
+      (option: any) => option.value,
     );
 
     if (value.length === 0 || value[0] === 'All') {
-      setFiltredMovies(AllMovies);
+      setFiltredMovies(AllMovies.slice(0, 12));
       setAllMoviesWithoutPagination(AllMovies);
     } else {
       setFiltredMovies(
@@ -65,6 +78,20 @@ export default function Index() {
       setAllMoviesWithoutPagination(
         AllMovies.filter((movie) => value.includes(movie.category)),
       );
+    }
+  };
+
+  const handleSearch = (value: string) => {
+    if (value === '') {
+      setFiltredMovies(AllMovies.slice(0, 12));
+      setAllMoviesWithoutPagination(AllMovies);
+    } else {
+      setFiltredMovies(
+        AllMovies.filter((movie) =>
+          movie.title.toLowerCase().includes(value.toLowerCase()),
+        ),
+      );
+      setAllMoviesWithoutPagination(AllMovies);
     }
   };
 
@@ -77,51 +104,16 @@ export default function Index() {
         <div className="max-w-7xl mx-auto w-full p-10 bg-gray-50 min-h-screen">
           <h1>Liste des films</h1>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="col-span-4 md:col-span-1 bg-gray-100 p-10">
-              <select
-                className="form-multiselect cursor-pointer w-full overflow-hidden mt-1 focus:outline-none focus:ring-0 focus:border-0 bg-transparent h-full min-h-[400px] appearance-none"
-                multiple
-                onChange={(e) => handdleCategoryChange(e)}
-              >
-                <option
-                  selected
-                  className="py-2 font-bold active:bg-purple-500 pl-5  visited:bg-purple-500"
-                  value="All"
-                >
-                  Tous les categorie
-                </option>
-                {categories.map((category) => (
-                  <option
-                    className="py-2 active:bg-purple-500 pl-3  visited:bg-purple-500 selected:bg-purple-500"
-                    value={category.category}
-                  >
-                    {category.category}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Categories
+              categories={categories}
+              handdleCategoryChange={handdleCategoryChange}
+            />
             <div className="col-span-4 md:col-span-3 ">
-              <div className="py-5">
-                <h1 className="">Rechercher votre film</h1>
-                <input
-                  type="text"
-                  className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                  value={Search}
-                  placeholder="Rechercher"
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                    setFiltredMovies(
-                      AllMovies?.filter((movie) =>
-                        movie.title
-                          .toLowerCase()
-                          .includes(e.target.value.toLowerCase()),
-                      ),
-                    );
-                  }}
-                />
-              </div>
+              <Search handleSearch={handleSearch} />
               <MoviesList FiltredMovies={FiltredMovies} />
               <Pagination
+                current={currentPage}
+                setCurrent={setCurrentPage}
                 items={AllMoviesWithoutPagination}
                 setFiltred={setFiltredMovies}
               />
