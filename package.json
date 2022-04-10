@@ -13,19 +13,14 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@badrap/bar-of-progress": "^0.1.2",
     "@headlessui/react": "^1.5.0",
     "@heroicons/react": "^1.0.6",
     "@reduxjs/toolkit": "^1.8.1",
-    "axios": "^0.26.1",
-    "dotenv": "^16.0.0",
     "next": "^12.1.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-redux": "^7.2.8",
-    "swr": "^1.2.2",
-    "tailwind-scrollbar-hide": "^1.1.7",
-    "yup": "^0.32.11"
+    "react-redux": "^7.2.8"
+
   },
   "devDependencies": {
     "@types/node": "^17.0.23",

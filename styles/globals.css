@@ -17,6 +17,13 @@
 }
 
 ::selection {
-  color: white;
+  color: red;
   background: rgb(168, 85, 247);
+  background-color: rgb(168, 85, 247);
+}
+select[multiple]:focus option:checked {
+  border-left: 4px solid rgb(168, 85, 247);
+  font-weight: 900;
+  background: rgb(168, 85, 247)
+    linear-gradient(0deg, rgb(156, 163, 175) 0%, rgb(156, 163, 175) 100%);
 }

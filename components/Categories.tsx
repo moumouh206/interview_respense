@@ -10,7 +10,7 @@ export default function Categories({ categories, handdleCategoryChange }) {
       >
         <option
           selected
-          className="py-2 font-bold active:bg-purple-500 pl-5  visited:bg-purple-500"
+          className="py-2 font-bold  pl-5  checked:bg-purple-300"
           value="All"
         >
           Tous les categorie
@@ -18,7 +18,7 @@ export default function Categories({ categories, handdleCategoryChange }) {
         {categories.map((category) => (
           <option
             key={category.category}
-            className="py-2 active:bg-purple-500 pl-3  visited:bg-purple-500 selected:bg-purple-500"
+            className="py-2 active:bg-purple-500 pl-3  checked:bg-purple-300 selected:bg-purple-500"
             value={category.category}
           >
             {category.category}
