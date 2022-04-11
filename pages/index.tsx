@@ -39,28 +39,24 @@ export default function Index() {
       Dispatch(setMovies(movies));
       setFiltredMovies(movies.slice(0, 12));
       setAllMoviesWithoutPagination(movies);
-      setCategories(
-        Object.values(
-          movies.reduce((m: Array<any>, { category }) => {
-            m[category] = { category };
-            return m;
-          }, {}),
-        ),
-      );
+      const disponiblecategories = movies
+        .filter(
+          (value, index, self) =>
+            index === self.findIndex((t) => t.category === value.category),
+        )
+        .map((value) => ({ category: value.category }));
+      setCategories(disponiblecategories);
     });
   };
   useEffect(films, []);
   useEffect(() => {
     setFiltredMovies(AllMovies.slice(0, 12));
     setAllMoviesWithoutPagination(AllMovies);
-    setCategories(
-      Object.values(
-        AllMovies?.reduce((m: Movie[], { category }) => {
-          m[category] = { category };
-          return m;
-        }, {}),
-      ),
-    );
+    const disponiblecategories = AllMovies.filter(
+      (value, index, self) =>
+        index === self.findIndex((t) => t.category === value.category),
+    ).map((value) => ({ category: value.category }));
+    setCategories(disponiblecategories);
   }, [AllMovies]);
   const handdleCategoryChange = (e: any) => {
     const value = Array.from(
