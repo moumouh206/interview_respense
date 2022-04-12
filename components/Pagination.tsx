@@ -2,8 +2,15 @@
 
 import React, { useEffect, useState } from 'react';
 
-export default function Pagination({ items, setFiltred, current, setCurrent }) {
-  const [pageSize, setPageSize] = useState(12);
+export default function Pagination({
+  items,
+  setFiltred,
+  current,
+  setCurrent,
+  moviesPerPage,
+  setMoviesPerPage,
+}) {
+  const [pageSize, setPageSize] = useState(moviesPerPage);
   const [currentPage, setCurrentPage] = useState(current);
   const pagesCount = Math.ceil(items.length / pageSize);
 
@@ -14,6 +21,7 @@ export default function Pagination({ items, setFiltred, current, setCurrent }) {
   };
   const handlePageSizeChange = (e: any) => {
     setPageSize(e.target.value);
+    setMoviesPerPage(e.target.value);
     setCurrentPage(1);
     setCurrent(1);
   };

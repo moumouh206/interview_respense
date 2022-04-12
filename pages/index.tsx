@@ -26,6 +26,7 @@ export default function Index() {
   const [FiltredMovies, setFiltredMovies] = useState([]);
   const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [moviesPerPage, setMoviesPerPage] = useState(12);
   const Dispatch = useDispatch();
   // get movies from data/movies.ts
   const films = () => {
@@ -37,7 +38,12 @@ export default function Index() {
       ); */
       // despatch the movies to the state
       Dispatch(setMovies(movies));
-      setFiltredMovies(movies.slice(0, 12));
+      setFiltredMovies(
+        movies.slice(
+          (currentPage - 1) * moviesPerPage,
+          currentPage * moviesPerPage,
+        ),
+      );
       setAllMoviesWithoutPagination(movies);
       const disponiblecategories = movies
         .filter(
@@ -50,7 +56,12 @@ export default function Index() {
   };
   useEffect(films, []);
   useEffect(() => {
-    setFiltredMovies(AllMovies.slice(0, 12));
+    setFiltredMovies(
+      AllMovies.slice(
+        (currentPage - 1) * moviesPerPage,
+        currentPage * moviesPerPage,
+      ),
+    );
     setAllMoviesWithoutPagination(AllMovies);
     const disponiblecategories = AllMovies.filter(
       (value, index, self) =>
@@ -65,7 +76,12 @@ export default function Index() {
     );
 
     if (value.length === 0 || value[0] === 'All') {
-      setFiltredMovies(AllMovies.slice(0, 12));
+      setFiltredMovies(
+        AllMovies.slice(
+          (currentPage - 1) * moviesPerPage,
+          currentPage * moviesPerPage,
+        ),
+      );
       setAllMoviesWithoutPagination(AllMovies);
     } else {
       setFiltredMovies(
@@ -79,7 +95,12 @@ export default function Index() {
 
   const handleSearch = (value: string) => {
     if (value === '') {
-      setFiltredMovies(AllMovies.slice(0, 12));
+      setFiltredMovies(
+        AllMovies.slice(
+          (currentPage - 1) * moviesPerPage,
+          currentPage * moviesPerPage,
+        ),
+      );
       setAllMoviesWithoutPagination(AllMovies);
     } else {
       setFiltredMovies(
@@ -112,6 +133,8 @@ export default function Index() {
                 setCurrent={setCurrentPage}
                 items={AllMoviesWithoutPagination}
                 setFiltred={setFiltredMovies}
+                moviesPerPage={moviesPerPage}
+                setMoviesPerPage={setMoviesPerPage}
               />
             </div>
           </div>
