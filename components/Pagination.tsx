@@ -1,28 +1,28 @@
 /* eslint-disable react/destructuring-assignment */
 
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCurrentPage, setPerPage } from 'redux/actions/paginationActions';
+import store from 'redux/store';
 
-export default function Pagination({
-  items,
-  setFiltred,
-  current,
-  setCurrent,
-  moviesPerPage,
-  setMoviesPerPage,
-}) {
-  const [pageSize, setPageSize] = useState(moviesPerPage);
-  const [currentPage, setCurrentPage] = useState(current);
+type RootState = ReturnType<typeof store.getState>;
+export default function Pagination({ items, setFiltred }) {
+  const pagination = useSelector((state: RootState) => state.pagination);
+  const { currentPage, perPage } = pagination.pagination;
+  const dispatch = useDispatch();
+
+  const [pageSize, setPageSize] = useState(perPage);
+  const [current, setCurrent] = useState(currentPage);
   const pagesCount = Math.ceil(items.length / pageSize);
 
   const pages = [...Array(pagesCount).keys()];
   const paginate = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
     setCurrent(pageNumber);
+    dispatch(setCurrentPage(pageNumber));
   };
   const handlePageSizeChange = (e: any) => {
     setPageSize(e.target.value);
-    setMoviesPerPage(e.target.value);
-    setCurrentPage(1);
+    dispatch(setPerPage(e.target.value));
     setCurrent(1);
   };
 
@@ -31,12 +31,12 @@ export default function Pagination({
       setFiltred(items.slice(0, pageSize));
     } else {
       const pageItems = items.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize,
+        (current - 1) * pageSize,
+        current * pageSize,
       );
       setFiltred(pageItems);
     }
-  }, [pageSize, currentPage]);
+  }, [pageSize, current]);
 
   return (
     <div>
@@ -45,8 +45,8 @@ export default function Pagination({
           <button
             className="bg-gray-200 p-2 rounded-lg text-sm mx-2 disabled:bg-gray-100 disabled:text-gray-300"
             type="button"
-            onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={currentPage === 1}
+            onClick={() => paginate(current - 1)}
+            disabled={current === 1}
           >
             Précédent
           </button>
@@ -55,7 +55,7 @@ export default function Pagination({
             <button
               type="button"
               className={`bg-gray-200 p-2 px-3 rounded-lg text-sm mx-2 ${
-                currentPage === page + 1 ? 'bg-purple-500 text-white' : ''
+                current === page + 1 ? 'bg-purple-500 text-white' : ''
               }`}
               key={page + 1}
               onClick={() => paginate(page + 1)}
@@ -67,8 +67,8 @@ export default function Pagination({
           <button
             className="bg-gray-200 p-2 rounded-lg text-sm mx-2 disabled:bg-gray-100 disabled:text-gray-300"
             type="button"
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={currentPage === pagesCount}
+            onClick={() => paginate(current + 1)}
+            disabled={current === pagesCount}
           >
             Suivant
           </button>

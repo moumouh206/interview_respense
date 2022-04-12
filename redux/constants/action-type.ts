@@ -7,5 +7,8 @@ const ActionType = {
   DELETE_MOVIE: 'DELETE_MOVIE',
   ADD_MOVIE: 'ADD_MOVIE',
   UPDATE_MOVIE: 'UPDATE_MOVIE',
+  // Pagination
+  SET_CURRENT_PAGE: 'SET_CURRENT_PAGE',
+  SET_PER_PAGE: 'SET_PER_PAGE',
 };
 export default ActionType;
