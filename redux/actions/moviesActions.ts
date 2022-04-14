@@ -5,6 +5,12 @@ export const fetchMovies = () => ({
   type: ActionType.FETCH_MOVIES,
 });
 
+// set filtred movies to the state
+export const setFiltredMovies = (movies) => ({
+  type: ActionType.SET_FILTRED_MOVIES,
+  payload: movies,
+});
+
 // set the movies in the state
 export const setMovies = (movies: any) => ({
   type: ActionType.SET_MOVIES,

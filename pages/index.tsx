@@ -4,7 +4,7 @@ import Movie from 'datatypes/movie';
 import movies$ from 'data/movies';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMovies } from 'redux/actions/moviesActions';
+import { setFiltredMovies, setMovies } from 'redux/actions/moviesActions';
 
 import Head from 'next/head';
 import MoviesList from 'components/MoviesList';
@@ -19,13 +19,10 @@ export default function Index() {
   const AllMovies: Movie[] = useSelector(
     (state: RootState) => state.allMovies.movies,
   );
+
   const pagination = useSelector((state: RootState) => state.pagination);
   const { currentPage, perPage } = pagination.pagination;
-  const [AllMoviesWithoutPagination, setAllMoviesWithoutPagination] = useState(
-    [],
-  );
 
-  const [FiltredMovies, setFiltredMovies] = useState([]);
   const [categories, setCategories] = useState([]);
 
   const Dispatch = useDispatch();
@@ -40,10 +37,12 @@ export default function Index() {
       // despatch the movies to the state
       Dispatch(setMovies(movies));
 
-      setFiltredMovies(
-        movies.slice((currentPage - 1) * perPage, currentPage * perPage),
+      Dispatch(
+        setFiltredMovies(
+          movies.slice((currentPage - 1) * perPage, currentPage * perPage),
+        ),
       );
-      setAllMoviesWithoutPagination(movies);
+
       const disponiblecategories = movies
         .filter(
           (value, index, self) =>
@@ -55,10 +54,12 @@ export default function Index() {
   };
   useEffect(films, []);
   useEffect(() => {
-    setFiltredMovies(
-      AllMovies.slice((currentPage - 1) * perPage, currentPage * perPage),
+    Dispatch(
+      setFiltredMovies(
+        AllMovies.slice((currentPage - 1) * perPage, currentPage * perPage),
+      ),
     );
-    setAllMoviesWithoutPagination(AllMovies);
+
     const disponiblecategories = AllMovies.filter(
       (value, index, self) =>
         index === self.findIndex((t) => t.category === value.category),
@@ -72,33 +73,35 @@ export default function Index() {
     );
 
     if (value.length === 0 || value[0] === 'All') {
-      setFiltredMovies(
-        AllMovies.slice((currentPage - 1) * perPage, currentPage * perPage),
+      Dispatch(
+        setFiltredMovies(
+          AllMovies.slice((currentPage - 1) * perPage, currentPage * perPage),
+        ),
       );
-      setAllMoviesWithoutPagination(AllMovies);
     } else {
-      setFiltredMovies(
-        AllMovies.filter((movie) => value.includes(movie.category)),
-      );
-      setAllMoviesWithoutPagination(
-        AllMovies.filter((movie) => value.includes(movie.category)),
+      Dispatch(
+        setFiltredMovies(
+          AllMovies.filter((movie) => value.includes(movie.category)),
+        ),
       );
     }
   };
 
   const handleSearch = (value: string) => {
     if (value === '') {
-      setFiltredMovies(
-        AllMovies.slice((currentPage - 1) * perPage, currentPage * perPage),
-      );
-      setAllMoviesWithoutPagination(AllMovies);
-    } else {
-      setFiltredMovies(
-        AllMovies.filter((movie) =>
-          movie.title.toLowerCase().includes(value.toLowerCase()),
+      Dispatch(
+        setFiltredMovies(
+          AllMovies.slice((currentPage - 1) * perPage, currentPage * perPage),
         ),
       );
-      setAllMoviesWithoutPagination(AllMovies);
+    } else {
+      Dispatch(
+        setFiltredMovies(
+          AllMovies.filter((movie) =>
+            movie.title.toLowerCase().includes(value.toLowerCase()),
+          ),
+        ),
+      );
     }
   };
 
@@ -117,11 +120,8 @@ export default function Index() {
             />
             <div className="col-span-4 md:col-span-3 ">
               <Search handleSearch={handleSearch} />
-              <MoviesList FiltredMovies={FiltredMovies} />
-              <Pagination
-                items={AllMoviesWithoutPagination}
-                setFiltred={setFiltredMovies}
-              />
+              <MoviesList />
+              <Pagination />
             </div>
           </div>
         </div>

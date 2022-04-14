@@ -1,19 +1,26 @@
 /* eslint-disable react/destructuring-assignment */
 
+import Movie from 'datatypes/movie';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { setFiltredMovies } from 'redux/actions/moviesActions';
 import { setCurrentPage, setPerPage } from 'redux/actions/paginationActions';
 import store from 'redux/store';
 
 type RootState = ReturnType<typeof store.getState>;
-export default function Pagination({ items, setFiltred }) {
+export default function Pagination() {
   const pagination = useSelector((state: RootState) => state.pagination);
+  const AllMovies: Movie[] = useSelector(
+    (state: RootState) => state.allMovies.movies,
+  );
+
   const { currentPage, perPage } = pagination.pagination;
   const dispatch = useDispatch();
 
-  const pagesCount = Math.ceil(items.length / perPage);
+  const pagesCount: number = Math.ceil(AllMovies.length / perPage);
 
   const pages = [...Array(pagesCount).keys()];
+
   const paginate = (pageNumber: number) => {
     dispatch(setCurrentPage(pageNumber));
   };
@@ -23,14 +30,14 @@ export default function Pagination({ items, setFiltred }) {
   };
 
   useEffect(() => {
-    if (items.length < perPage) {
-      setFiltred(items.slice(0, perPage));
+    if (AllMovies.length < perPage) {
+      dispatch(setFiltredMovies(AllMovies.slice(0, perPage)));
     } else {
-      const pageItems = items.slice(
+      const pageItems = AllMovies.slice(
         (currentPage - 1) * perPage,
         currentPage * perPage,
       );
-      setFiltred(pageItems);
+      dispatch(setFiltredMovies(pageItems));
     }
   }, [perPage, currentPage]);
 

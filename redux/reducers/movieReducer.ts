@@ -2,6 +2,7 @@ import ActionType from 'redux/constants/action-type';
 
 const initialState = {
   movies: [],
+  filtredMovies: [],
 };
 
 const movieReducer = (state = initialState, action: any) => {
@@ -10,6 +11,11 @@ const movieReducer = (state = initialState, action: any) => {
       return {
         ...state,
         movies: action.payload,
+      };
+    case ActionType.SET_FILTRED_MOVIES:
+      return {
+        ...state,
+        filtredMovies: action.payload,
       };
     case ActionType.FETCH_MOVIES:
       return {
