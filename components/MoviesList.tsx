@@ -1,5 +1,5 @@
 import Movie from 'datatypes/movie';
-import React from 'react';
+
 import { useSelector } from 'react-redux';
 import store from 'redux/store';
 import MovieComponent from './Movie';
@@ -9,6 +9,7 @@ export default function MoviesList() {
   const filtredMovies: Movie[] = useSelector(
     (state: RootState) => state.allMovies.filtredMovies,
   );
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {filtredMovies.length > 0 ? (

@@ -2,7 +2,7 @@
 
 import Movie from 'datatypes/movie';
 import movies$ from 'data/movies';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFiltredMovies, setMovies } from 'redux/actions/moviesActions';
 
@@ -23,8 +23,6 @@ export default function Index() {
   const pagination = useSelector((state: RootState) => state.pagination);
   const { currentPage, perPage } = pagination.pagination;
 
-  const [categories, setCategories] = useState([]);
-
   const Dispatch = useDispatch();
   // get movies from data/movies.ts
   const films = () => {
@@ -42,14 +40,6 @@ export default function Index() {
           movies.slice((currentPage - 1) * perPage, currentPage * perPage),
         ),
       );
-
-      const disponiblecategories = movies
-        .filter(
-          (value, index, self) =>
-            index === self.findIndex((t) => t.category === value.category),
-        )
-        .map((value) => ({ category: value.category }));
-      setCategories(disponiblecategories);
     });
   };
   useEffect(films, []);
@@ -59,33 +49,7 @@ export default function Index() {
         AllMovies.slice((currentPage - 1) * perPage, currentPage * perPage),
       ),
     );
-
-    const disponiblecategories = AllMovies.filter(
-      (value, index, self) =>
-        index === self.findIndex((t) => t.category === value.category),
-    ).map((value) => ({ category: value.category }));
-    setCategories(disponiblecategories);
   }, [AllMovies]);
-  const handdleCategoryChange = (e: any) => {
-    const value = Array.from(
-      e.target.selectedOptions,
-      (option: any) => option.value,
-    );
-
-    if (value.length === 0 || value[0] === 'All') {
-      Dispatch(
-        setFiltredMovies(
-          AllMovies.slice((currentPage - 1) * perPage, currentPage * perPage),
-        ),
-      );
-    } else {
-      Dispatch(
-        setFiltredMovies(
-          AllMovies.filter((movie) => value.includes(movie.category)),
-        ),
-      );
-    }
-  };
 
   const handleSearch = (value: string) => {
     if (value === '') {
@@ -114,10 +78,7 @@ export default function Index() {
         <div className="max-w-7xl mx-auto w-full p-10 bg-gray-50 min-h-screen">
           <h1>Liste des films</h1>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Categories
-              categories={categories}
-              handdleCategoryChange={handdleCategoryChange}
-            />
+            <Categories />
             <div className="col-span-4 md:col-span-3 ">
               <Search handleSearch={handleSearch} />
               <MoviesList />
