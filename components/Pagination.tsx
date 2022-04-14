@@ -1,6 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentPage, setPerPage } from 'redux/actions/paginationActions';
 import store from 'redux/store';
@@ -11,32 +11,28 @@ export default function Pagination({ items, setFiltred }) {
   const { currentPage, perPage } = pagination.pagination;
   const dispatch = useDispatch();
 
-  const [pageSize, setPageSize] = useState(perPage);
-  const [current, setCurrent] = useState(currentPage);
-  const pagesCount = Math.ceil(items.length / pageSize);
+  const pagesCount = Math.ceil(items.length / perPage);
 
   const pages = [...Array(pagesCount).keys()];
   const paginate = (pageNumber: number) => {
-    setCurrent(pageNumber);
     dispatch(setCurrentPage(pageNumber));
   };
-  const handlePageSizeChange = (e: any) => {
-    setPageSize(e.target.value);
+  const handleperPageChange = (e: any) => {
     dispatch(setPerPage(e.target.value));
-    setCurrent(1);
+    dispatch(setCurrentPage(1));
   };
 
   useEffect(() => {
-    if (items.length < pageSize) {
-      setFiltred(items.slice(0, pageSize));
+    if (items.length < perPage) {
+      setFiltred(items.slice(0, perPage));
     } else {
       const pageItems = items.slice(
-        (current - 1) * pageSize,
-        current * pageSize,
+        (currentPage - 1) * perPage,
+        currentPage * perPage,
       );
       setFiltred(pageItems);
     }
-  }, [pageSize, current]);
+  }, [perPage, currentPage]);
 
   return (
     <div>
@@ -45,8 +41,8 @@ export default function Pagination({ items, setFiltred }) {
           <button
             className="bg-gray-200 p-2 rounded-lg text-sm mx-2 disabled:bg-gray-100 disabled:text-gray-300"
             type="button"
-            onClick={() => paginate(current - 1)}
-            disabled={current === 1}
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
           >
             Précédent
           </button>
@@ -55,7 +51,7 @@ export default function Pagination({ items, setFiltred }) {
             <button
               type="button"
               className={`bg-gray-200 p-2 px-3 rounded-lg text-sm mx-2 ${
-                current === page + 1 ? 'bg-purple-500 text-white' : ''
+                currentPage === page + 1 ? 'bg-purple-500 text-white' : ''
               }`}
               key={page + 1}
               onClick={() => paginate(page + 1)}
@@ -67,8 +63,8 @@ export default function Pagination({ items, setFiltred }) {
           <button
             className="bg-gray-200 p-2 rounded-lg text-sm mx-2 disabled:bg-gray-100 disabled:text-gray-300"
             type="button"
-            onClick={() => paginate(current + 1)}
-            disabled={current === pagesCount}
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === pagesCount}
           >
             Suivant
           </button>
@@ -76,7 +72,7 @@ export default function Pagination({ items, setFiltred }) {
         <div className="flex items-center">
           <span className="text-sm text-gray-500 mr-4">Film par page:</span>
           <select
-            onChange={(e) => handlePageSizeChange(e)}
+            onChange={(e) => handleperPageChange(e)}
             className="p-1"
             defaultValue={12}
           >
