@@ -1,7 +1,11 @@
 import Movie from 'datatypes/movie';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFiltredMovies } from 'redux/actions/moviesActions';
+import {
+  setFiltredMovies,
+  setMoviesPerPage,
+  setSearchQuery,
+} from 'redux/actions/moviesActions';
 import store from 'redux/store';
 
 type RootState = ReturnType<typeof store.getState>;
@@ -9,26 +13,14 @@ export default function Search() {
   const allMovies: Movie[] = useSelector(
     (state: RootState) => state.allMovies.movies,
   );
-  const pagination = useSelector((state: RootState) => state.pagination);
-  const { currentPage, perPage } = pagination.pagination;
+
   const [search, setSearch] = useState('');
   const dispatch = useDispatch();
   const handleSearch = (value: string) => {
-    if (value === '') {
-      dispatch(
-        setFiltredMovies(
-          allMovies.slice((currentPage - 1) * perPage, currentPage * perPage),
-        ),
-      );
-    } else {
-      dispatch(
-        setFiltredMovies(
-          allMovies.filter((movie) =>
-            movie.title.toLowerCase().includes(value.toLowerCase()),
-          ),
-        ),
-      );
-    }
+    dispatch(setSearchQuery(value));
+    const MoviesSearch = allMovies.filter((movie) =>
+      movie.title.toLowerCase().includes(value.toLowerCase()),
+    );
   };
   return (
     <div className="py-5">

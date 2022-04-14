@@ -11,10 +11,28 @@ export const setFiltredMovies = (movies) => ({
   payload: movies,
 });
 
+// Set slected categories to the state
+export const setSelectedCategories = (categories) => ({
+  type: ActionType.SET_SELECTED_CATEGORIES,
+  payload: categories,
+});
+
+// Set Movies per page to the state
+export const setMoviesPerPage = (movies) => ({
+  type: ActionType.SET_MOVIES_PER_PAGE,
+  payload: movies,
+});
+
 // set the movies in the state
 export const setMovies = (movies: any) => ({
   type: ActionType.SET_MOVIES,
   payload: movies,
+});
+
+// set Search query to the state
+export const setSearchQuery = (query: string) => ({
+  type: ActionType.SET_SEARCH_QUERY,
+  payload: query,
 });
 
 // like a movie

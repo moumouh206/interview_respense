@@ -10,24 +10,45 @@ import {
 
 export default function Movie(props) {
   const { movie } = props;
-  const { id, title, category, Poster, likes, dislikes } = movie;
+  const {
+    id,
+    title,
+    category,
+    Poster,
+    likes,
+    dislikes,
+    liked = false,
+    disliked = false,
+  } = movie;
   const [isOpen, setIsOpen] = useState(false);
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
+  const [likedByUser, setLikedByUser] = useState(liked);
+  const [dislikedByUser, setDislikedByUser] = useState(disliked);
 
   const dispatch = useDispatch();
   // like the movie in the state
   const like = () => {
-    setLiked(true);
-    setDisliked(false);
-    dispatch(likeMovie(id));
+    if (likedByUser === false || likedByUser === null) {
+      setLikedByUser(true);
+      setDislikedByUser(false);
+      dispatch(likeMovie(id));
+    } else {
+      setLikedByUser(false);
+      setDislikedByUser(false);
+      dispatch(likeMovie(id));
+    }
   };
 
   // dislike the movie in the state
   const dislike = () => {
-    setLiked(false);
-    setDisliked(true);
-    dispatch(dislikeMovie(id));
+    if (dislikedByUser === false || dislikedByUser === null) {
+      setDislikedByUser(true);
+      setLikedByUser(false);
+      dispatch(dislikeMovie(id));
+    } else {
+      setDislikedByUser(false);
+      setLikedByUser(false);
+      dispatch(dislikeMovie(id));
+    }
   };
 
   // delete the movie in the state
@@ -64,7 +85,7 @@ export default function Movie(props) {
             >
               <ThumbUpIcon
                 className={`w-5 h-5 text-gray-400 ${
-                  liked ? 'text-green-500' : ''
+                  likedByUser ? 'text-green-500' : ''
                 }`}
               />
               <span className="text-gray-500 text-sm">{likes}</span>
@@ -76,7 +97,7 @@ export default function Movie(props) {
             >
               <ThumbDownIcon
                 className={`w-5 h-5 text-gray-400 ${
-                  disliked ? 'text-red-500' : ''
+                  dislikedByUser ? 'text-red-500' : ''
                 }`}
               />
               <span className="text-gray-500 text-sm">{dislikes}</span>

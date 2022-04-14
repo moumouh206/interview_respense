@@ -1,19 +1,15 @@
 import Movie from 'datatypes/movie';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFiltredMovies } from 'redux/actions/moviesActions';
+import { setSelectedCategories } from 'redux/actions/moviesActions';
+import { setCurrentPage } from 'redux/actions/paginationActions';
 import store from 'redux/store';
 
 type RootState = ReturnType<typeof store.getState>;
 export default function Categories() {
-  const filtredMovies: Movie[] = useSelector(
-    (state: RootState) => state.allMovies.filtredMovies,
-  );
   const allMovies: Movie[] = useSelector(
     (state: RootState) => state.allMovies.movies,
   );
-  const pagination = useSelector((state: RootState) => state.pagination);
-  const { currentPage, perPage } = pagination.pagination;
 
   const [categories, setCategories] = useState<{ category: string }[]>([]);
   const dispatch = useDispatch();
@@ -25,26 +21,14 @@ export default function Categories() {
       )
       .map((value) => ({ category: value.category }));
     setCategories(disponiblecategories);
-  }, [filtredMovies]);
+  }, [allMovies]);
   const handdleCategoryChange = (e: any) => {
     const value = Array.from(
       e.target.selectedOptions,
       (option: any) => option.value,
     );
-
-    if (value.length === 0 || value[0] === 'All') {
-      dispatch(
-        setFiltredMovies(
-          allMovies.slice((currentPage - 1) * perPage, currentPage * perPage),
-        ),
-      );
-    } else {
-      dispatch(
-        setFiltredMovies(
-          allMovies.filter((movie) => value.includes(movie.category)),
-        ),
-      );
-    }
+    dispatch(setSelectedCategories(value));
+    dispatch(setCurrentPage(1));
   };
   return (
     <div className="col-span-4 md:col-span-1 bg-gray-100 p-10">
@@ -52,9 +36,9 @@ export default function Categories() {
         className="form-multiselect cursor-pointer w-full overflow-hidden mt-1 focus:outline-none focus:ring-0 focus:border-0 bg-transparent h-full min-h-[400px] appearance-none"
         multiple
         onChange={(e) => handdleCategoryChange(e)}
+        defaultValue={categories}
       >
         <option
-          selected
           className="py-2 font-bold  pl-5  checked:bg-purple-300"
           value="All"
         >

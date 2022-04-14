@@ -3,6 +3,9 @@ import ActionType from 'redux/constants/action-type';
 const initialState = {
   movies: [],
   filtredMovies: [],
+  moviesPerPage: [],
+  selectedCategories: [],
+  search: '',
 };
 
 const movieReducer = (state = initialState, action: any) => {
@@ -17,6 +20,22 @@ const movieReducer = (state = initialState, action: any) => {
         ...state,
         filtredMovies: action.payload,
       };
+    case ActionType.SET_MOVIES_PER_PAGE:
+      return {
+        ...state,
+        moviesPerPage: action.payload,
+      };
+    case ActionType.SET_SELECTED_CATEGORIES:
+      return {
+        ...state,
+        selectedCategories: action.payload,
+      };
+    case ActionType.SET_SEARCH_QUERY:
+      return {
+        ...state,
+        search: action.payload,
+      };
+
     case ActionType.FETCH_MOVIES:
       return {
         ...state,
@@ -29,8 +48,10 @@ const movieReducer = (state = initialState, action: any) => {
           if (movie.id === action.id) {
             return {
               ...movie,
-              likes: movie.likes + 1,
-              dislikes: movie.dislikes > 0 ? movie.dislikes - 1 : 0,
+              likes: movie.liked ? movie.likes - 1 : movie.likes + 1,
+              liked: movie.liked ? false : true,
+              dislikes: movie.disliked ? movie.dislikes - 1 : movie.dislikes,
+              disliked: movie.disliked ? false : null,
             };
           }
           return movie;
@@ -43,8 +64,13 @@ const movieReducer = (state = initialState, action: any) => {
           if (movie.id === action.id) {
             return {
               ...movie,
-              likes: movie.likes > 0 ? movie.likes - 1 : 0,
-              dislikes: movie.dislikes + 1,
+              // likes: movie.likes > 0 ? movie.likes - 1 : 0,
+              dislikes: movie.disliked
+                ? movie.dislikes - 1
+                : movie.dislikes + 1,
+              disliked: movie.disliked ? false : true,
+              likes: movie.liked ? movie.likes - 1 : movie.likes,
+              liked: movie.liked ? false : null,
             };
           }
           return movie;

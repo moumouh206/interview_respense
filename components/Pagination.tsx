@@ -1,23 +1,22 @@
 /* eslint-disable react/destructuring-assignment */
 
 import Movie from 'datatypes/movie';
-import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setFiltredMovies } from 'redux/actions/moviesActions';
+
 import { setCurrentPage, setPerPage } from 'redux/actions/paginationActions';
 import store from 'redux/store';
 
 type RootState = ReturnType<typeof store.getState>;
 export default function Pagination() {
   const pagination = useSelector((state: RootState) => state.pagination);
-  const AllMovies: Movie[] = useSelector(
-    (state: RootState) => state.allMovies.movies,
+  const filtredMovies: Movie[] = useSelector(
+    (state: RootState) => state.allMovies.filtredMovies,
   );
 
   const { currentPage, perPage } = pagination.pagination;
   const dispatch = useDispatch();
 
-  const pagesCount: number = Math.ceil(AllMovies.length / perPage);
+  const pagesCount: number = Math.ceil(filtredMovies.length / perPage);
 
   const pages = [...Array(pagesCount).keys()];
 
@@ -28,18 +27,6 @@ export default function Pagination() {
     dispatch(setPerPage(e.target.value));
     dispatch(setCurrentPage(1));
   };
-
-  useEffect(() => {
-    if (AllMovies.length < perPage) {
-      dispatch(setFiltredMovies(AllMovies.slice(0, perPage)));
-    } else {
-      const pageItems = AllMovies.slice(
-        (currentPage - 1) * perPage,
-        currentPage * perPage,
-      );
-      dispatch(setFiltredMovies(pageItems));
-    }
-  }, [perPage, currentPage]);
 
   return (
     <div>
@@ -83,10 +70,7 @@ export default function Pagination() {
             className="p-1"
             defaultValue={12}
           >
-            {/* <option value={3}>3</option>
-            <option value={4}>4</option> */}
             <option value={6}>6</option>
-            {/* <option value={8}>8</option> */}
             <option value={12}>12</option>
             <option value={18}>18</option>
           </select>
