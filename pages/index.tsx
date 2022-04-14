@@ -51,24 +51,6 @@ export default function Index() {
     );
   }, [AllMovies]);
 
-  const handleSearch = (value: string) => {
-    if (value === '') {
-      Dispatch(
-        setFiltredMovies(
-          AllMovies.slice((currentPage - 1) * perPage, currentPage * perPage),
-        ),
-      );
-    } else {
-      Dispatch(
-        setFiltredMovies(
-          AllMovies.filter((movie) =>
-            movie.title.toLowerCase().includes(value.toLowerCase()),
-          ),
-        ),
-      );
-    }
-  };
-
   return (
     <div className="flex flex-col items-center  min-h-screen pb-2 font-medium">
       <Head>
@@ -80,7 +62,7 @@ export default function Index() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Categories />
             <div className="col-span-4 md:col-span-3 ">
-              <Search handleSearch={handleSearch} />
+              <Search />
               <MoviesList />
               <Pagination />
             </div>
