@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 import movies$ from 'data/movies';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
