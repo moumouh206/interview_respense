@@ -58,7 +58,7 @@ export default function Pagination() {
             className="bg-gray-200 p-2 rounded-lg text-sm mx-2 disabled:bg-gray-100 disabled:text-gray-300"
             type="button"
             onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === pagesCount}
+            disabled={currentPage === pagesCount || pagesCount === 0}
           >
             Suivant
           </button>
